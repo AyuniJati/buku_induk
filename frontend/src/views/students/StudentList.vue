@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
+import api from '../../services/api'
 
 const students = ref([])
 const loading = ref(true)
@@ -10,7 +10,7 @@ const searchQuery = ref('') // State untuk kotak pencarian
 // Ambil data siswa
 const fetchStudents = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/api/students')
+    const response = await api.get('/students')
     students.value = response.data
   } catch (err) {
     error.value = 'Gagal memuat data siswa'
@@ -24,7 +24,7 @@ const fetchStudents = async () => {
 const deleteStudent = async (id, nama) => {
   if (confirm(`Apakah Anda yakin ingin menghapus data siswa bernama ${nama}?`)) {
     try {
-      await axios.delete(`http://localhost:3000/api/students/${id}`)
+      await api.delete(`/students/${id}`)
       alert('Data berhasil dihapus!')
       fetchStudents()
     } catch (err) {
@@ -102,8 +102,26 @@ onMounted(() => {
             <td>{{ student.gender }}</td>
             <td>{{ student.status }}</td>
             <td>
-              <button class="btn-edit" @click="$router.push(`/students/${student.id}/edit`)">Edit</button>
-              <button class="btn-delete" @click="deleteStudent(student.id, student.fullName)">Hapus</button>
+              <button
+                class="btn-detail"
+                @click="$router.push(`/students/${student.id}`)"
+              >
+                Detail
+              </button>
+
+              <button
+                class="btn-edit"
+                @click="$router.push(`/students/${student.id}/edit`)"
+              >
+                Edit
+              </button>
+
+              <button
+                class="btn-delete"
+                @click="deleteStudent(student.id, student.fullName)"
+              >
+                Hapus
+              </button>
             </td>
           </tr>
         </tbody>
@@ -143,6 +161,15 @@ onMounted(() => {
 .btn-edit {
   padding: 5px 10px;
   background-color: #ff9800;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  border-radius: 4px;
+}
+.btn-detail {
+  padding: 5px 10px;
+  background-color: #2196F3;
   color: white;
   border: none;
   cursor: pointer;

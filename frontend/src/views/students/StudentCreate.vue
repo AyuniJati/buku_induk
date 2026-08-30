@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
+import api from '../../services/api'
 
 const router = useRouter()
 
@@ -22,7 +22,7 @@ const submitForm = async () => {
   error.value = null
   
   try {
-    await axios.post('http://localhost:3000/api/students', form.value)
+    await api.post('/students', form.value)
     alert('Data siswa berhasil ditambahkan!')
     // Kembali ke halaman daftar siswa setelah sukses
     router.push('/students')
