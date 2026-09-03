@@ -32,6 +32,11 @@ model Student {
 
   parents         Parent[]
   education       Education?
+  developments    StudentDevelopment[]
+  grades          Grade[]
+  achievements    Achievement[]
+  extracurriculars Extracurricular[]
+  violations        Violation[]
 
 }
 
@@ -72,4 +77,117 @@ model Education {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model StudentDevelopment {
+  id            Int      @id @default(autoincrement())
+
+  studentId     Int
+    student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  academicYear  String
+  semester      String
+  height        Float?
+  weight        Float?
+  academic      String?
+  attitude      String?
+  social        String?
+  notes         String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model Grade {
+  id            Int      @id @default(autoincrement())
+
+  studentId     Int
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  academicYear  String
+  semester      String
+
+  subject       String
+
+  knowledge     Float?
+  skill         Float?
+  finalScore    Float?
+  predicate     String?
+
+  description   String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model Achievement {
+  id             Int      @id @default(autoincrement())
+  studentId      Int
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  achievementType String
+  title           String
+  level           String?
+  rank            String?
+  organizer       String?
+  academicYear    String?
+  date            DateTime?
+  description     String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model Extracurricular {
+  id           Int      @id @default(autoincrement())
+
+  studentId    Int
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  activityName String
+  role         String?
+  level        String?
+  academicYear String?
+  status       String   @default("ACTIVE")
+  description  String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model Violation {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  violationType String
+  level         String?
+  points        Int?
+  violationDate DateTime
+  sanction      String?
+  status        String   @default("ACTIVE")
+  description   String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([studentId])
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  status       String   @default("ACTIVE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
